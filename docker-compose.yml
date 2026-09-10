@@ -1,0 +1,37 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: moodle-mariadb
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--innodb-file-per-table=1"]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: moodle
+      MYSQL_USER: moodle
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - moodle_net
+
+  moodle:
+    build: .
+    container_name: moodle
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/var/www/html
+      - moodledata:/var/www/moodledata
+    networks:
+      - moodle_net
+
+volumes:
+  mariadb_data:
+  moodledata:
+
+networks:
+  moodle_net:
+    driver: bridge
