@@ -39,7 +39,10 @@ fi
 # ueberschrieben werden -- html/ ist gitignored, dieses Skript ist die
 # einzige Quelle der Wahrheit dafuer, was installiert wird).
 declare -A PLUGINS=(
-  ["course/format/flexsections"]="https://github.com/marinaglancy/moodle-format_flexsections.git|MOODLE_500_STABLE"
+  # Ab Moodle 5.0 liegt der Plugin-Quellcode unter public/, nicht mehr im
+  # Repo-Wurzelverzeichnis (siehe DocumentRoot-Kommentar oben im Dockerfile) --
+  # Moodle scannt fuer Kursformate ausschliesslich public/course/format/.
+  ["public/course/format/flexsections"]="https://github.com/marinaglancy/moodle-format_flexsections.git|MOODLE_500_STABLE"
 )
 
 for path in "${!PLUGINS[@]}"; do
