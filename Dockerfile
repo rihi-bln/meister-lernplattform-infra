@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     libxslt1-dev \
     libonig-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip intl mysqli opcache xsl soap \
+    && docker-php-ext-install -j$(nproc) gd zip intl mysqli opcache xsl soap exif \
+    && echo "max_input_vars = 5000" > /usr/local/etc/php/conf.d/moodle.ini \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
