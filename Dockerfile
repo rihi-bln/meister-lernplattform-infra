@@ -1,6 +1,6 @@
 FROM php:8.3-apache
 
-# Moodle 4.5 LTS Systemabhaengigkeiten + PHP-Extensions
+# Moodle 5.2 Systemabhaengigkeiten + PHP-Extensions
 RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
@@ -15,6 +15,15 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd zip intl mysqli opcache xsl soap \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
+
+# Ab Moodle 5.0 liegt der oeffentliche Webroot unter public/ statt im
+# Repo-Wurzelverzeichnis (Symfony/Laravel-artige Umstrukturierung) --
+# Apache muss deshalb auf public/ zeigen, nicht auf /var/www/html direkt.
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf \
+    /etc/apache2/conf-available/*.conf
 
 EXPOSE 80
 
