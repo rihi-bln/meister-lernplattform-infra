@@ -1,0 +1,8 @@
+# Secrets
+.env
+
+# Moodle-Core-Checkout (per setup.sh geklont, eigene Update-Historie)
+html/
+
+# macOS
+.DS_Store
